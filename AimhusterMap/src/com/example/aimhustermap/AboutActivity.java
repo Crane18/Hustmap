@@ -7,7 +7,6 @@ import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,7 +18,6 @@ public class AboutActivity extends Activity{
 	
 	
 	Button checkUpdate;
-	Button back ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -27,26 +25,8 @@ public class AboutActivity extends Activity{
 		requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		 ManagerApp app = (ManagerApp)this.getApplication();
 	        app.addActivity(this);
-		setContentView(R.layout.activity_about);
-
+		setContentView(R.layout.about);
 		checkUpdate = (Button)findViewById(R.id.check_update);
-		back = (Button)findViewById(R.id.back_about);
-		
-		back.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-				intent.setClass(AboutActivity.this, SettingActivity.class);
-				AboutActivity.this.startActivity(intent);
-				
-				overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-				AboutActivity.this.finish();
-				
-			}
-		});
-		
 		checkUpdate.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -87,25 +67,6 @@ public class AboutActivity extends Activity{
 		});
 		
 		
-		
-		
-		
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode,KeyEvent event){
-		
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			Intent intent = new Intent();
-			intent.setClass(AboutActivity.this, SettingActivity.class);
-			AboutActivity.this.startActivity(intent);
-			
-			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-			AboutActivity.this.finish();
-			return true ;
-		}
-		
-		return false;
 	}
 	
 	public void onResume() {
@@ -116,5 +77,7 @@ public class AboutActivity extends Activity{
 	    super.onPause();
 	    MobclickAgent.onPause(this);
 	}
+	
+	
 
 }

@@ -1,10 +1,7 @@
 package com.example.aimhustermap;
 
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -94,6 +91,8 @@ public class HusterMain extends Activity {
 	List<String> recievetextViewList=new ArrayList<String>();
 	ArrayAdapter<String> adapter=null;
 	PopupWindow pw;
+	PopupWindow fenlei_pw = new PopupWindow();
+	boolean fenlei_pw_isshowing=false;
 	public ListView listView=null;
 	public EditText editView=null;
 	List<DatabaseHust> poiSearch=new ArrayList<DatabaseHust>();
@@ -122,7 +121,7 @@ public class HusterMain extends Activity {
 			LocationData locData = null;
 			EditText editSearch;
 			ArrayAdapter<String> adapter1;
-			ListView list1;
+			ListView list_dropdown;//搜索提示框
 			public MyLocationListenner myListener = new MyLocationListenner();
 			Button requestLocButton = null;
 			boolean isRequest = false;//是否手动触发请求定位
@@ -136,23 +135,15 @@ public class HusterMain extends Activity {
             private Button locButton=null;
             private Button settingButton=null;
             private Button showButton=null;
-            private LinearLayout layout;
+            private LinearLayout layout;//下面菜单栏
             private Handler handler  =new Handler()
             {
          	   @Override
          	   public void handleMessage(Message msg)
          	   {
-         		   if(msg.what==0)
-         		   {
-         			   showButton.setBackgroundResource(R.drawable.left_arrow);
-         		   }
-         		   else if(msg.what==1)
-         		   {
-         			   showButton.setBackgroundResource(R.drawable.right_arrow);				
-     			   }
-         		   else if (msg.what==2) {
-         			   Toast.makeText(HusterMain.this, "定位不成功或不在武汉市内", Toast.LENGTH_SHORT).show();
-					
+         		  
+         		   if (msg.what==2) {
+         			   Toast.makeText(HusterMain.this, "定位不成功或不在武汉市内", Toast.LENGTH_SHORT).show();					
 				}
          	   }
             };
@@ -192,7 +183,6 @@ public class HusterMain extends Activity {
         /**
           * 由于MapView在setContentView()中初始化,所以它需要在BMapManager初始化之后
           */
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
         
 		setContentView(R.layout.activity_huster_main);
 		
@@ -213,17 +203,6 @@ public class HusterMain extends Activity {
          */
         mMapController.setZoom(15);
         
-    	
-//        Time t=new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料。  
-//        t.setToNow(); // 取得系统时间。
-//         year = t.year;  
-//         month = t.month+1;
-//         System.out.println("-----year="+String.valueOf(year)+" "+"month="+String.valueOf(month));
-//         if(year>2013||month>7)
-//	       {
-//	    	   isLocked=false;
-//	    	   System.out.println("----------->01  isLocked="+String.valueOf(isLocked));
-//	       }
          
       
       //写在onCreate函数里  
@@ -250,12 +229,12 @@ public class HusterMain extends Activity {
                   }  
         }  
         ); 
-        
-        MapManager mapManager = new MapManager(this);
-        mapManager.includeMap();
      
-//        includeMap();//将离线地图读入SD卡根目录
-        int num = mOffline.scan();//导入离线地图     
+
+        MapManager mapManager=new MapManager(HusterMain.this);
+        mapManager.includeMap();
+        int num=mOffline.scan();//导入离线地图
+        
         mySearcher = new DatabaseSearcher(HusterMain.this);
         
         myPoi1=new MyPoi("华中科技大学", 114.419896, 30.51344);
@@ -392,11 +371,11 @@ public class HusterMain extends Activity {
 		drawable[8]=res.getDrawable(R.drawable.icon_marki);
 		drawable[9]=res.getDrawable(R.drawable.icon_markj);
 		
-        list1=(ListView)findViewById(R.id.listview1);
+        list_dropdown=(ListView)findViewById(R.id.listview1);
         editSearch = (EditText) findViewById(R.id.searchkey); 
 	
 		 adapter1=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,myPoies);
-		 list1.setAdapter(adapter1);
+		 list_dropdown.setAdapter(adapter1);
 	     classifyButton=(Button)findViewById(R.id.fenlei);
 		 locButton=(Button)findViewById(R.id.loc);
 		 settingButton=(Button)findViewById(R.id.setting);
@@ -404,12 +383,13 @@ public class HusterMain extends Activity {
 		 showButton=(Button)findViewById(R.id.showbtn);
 		 layout =(LinearLayout)findViewById(R.id.layout1);
 		 searchButton.setEnabled(false);
+		 
 		 searchButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				list1.setVisibility(View.GONE);
+				list_dropdown.setVisibility(View.GONE);
 				closeKeyboard();
 				if(layout.isShown())
 				{
@@ -499,24 +479,41 @@ public class HusterMain extends Activity {
 		         }	
 			}
 		});
+		 
 		 classifyButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				list1.setVisibility(View.GONE);
-				  showfenlei_PopupWindow(v);
-				  classifyButton.setBackgroundResource(R.drawable.fenlei1);
+				list_dropdown.setVisibility(View.GONE);
+				System.out.println("---------->fenlei_pw.isShowing"+String.valueOf(fenlei_pw.isShowing()));
+				if(fenlei_pw.isShowing()||fenlei_pw_isshowing)
+				{
+					fenlei_pw.dismiss();
+					if (layout.isShown()) {
+						layout_dismiss();
+					}
+					fenlei_pw_isshowing=false;
+				}
+				else {
+					showfenlei_PopupWindow(v);
+					 classifyButton.setBackgroundResource(R.drawable.fenlei1);
+				}
 						               
 			}
 		});
-		 locButton.setOnClickListener(new OnClickListener() {
+		
+         locButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				list1.setVisibility(View.GONE);
-				classifyButton.setBackgroundResource(R.drawable.fenlei2);
+				
+				list_dropdown.setVisibility(View.GONE);
+				if(layout.isShown())
+				{
+					layout_dismiss();
+				}
 				 double zoomLever=mMapView.getZoomLevel();
 				 if(hasAdd&&zoomLever<=18.9)
 			     {
@@ -539,14 +536,18 @@ public class HusterMain extends Activity {
 			}
 		});
 		
-       settingButton.setOnClickListener(new OnClickListener() {
+         settingButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-			 classifyButton.setBackgroundResource(R.drawable.fenlei2);
+				
 			  Intent intent=new Intent(HusterMain.this,SettingActivity.class);
 			  startActivity(intent);
+			  if(layout.isShown())
+			  {
+				  layout_dismiss();
+			  }
 			}
 		})	;	
        
@@ -564,23 +565,14 @@ public class HusterMain extends Activity {
 				layout.setVisibility(View.VISIBLE);				
 				Animation animation = AnimationUtils.loadAnimation(HusterMain.this, R.anim.translate_display);
 				layout.startAnimation(animation);
-				timer.schedule(new TimerTask() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						Message msg=new Message();
-						msg.what=1;
-						handler.sendMessage(msg);
-					}
-				}, 500);
+
 				}
 				else {
 					layout_dismiss();
 				}
 			}
 		});
-		 list1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		 list_dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override  
 		        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,  
 		                long arg3) {  
@@ -597,8 +589,8 @@ public class HusterMain extends Activity {
 					 ArrayList<OverlayItem> items=new ArrayList<OverlayItem>();
 					
 			         //mOverlay = new MyOverlay(getResources().getDrawable(R.drawable.icon_marka),mMapView);	
-					System.out.println("----------->list1Size:"+list1.getCount());
-					String place = list1.getItemAtPosition(arg2).toString();
+					System.out.println("----------->list1Size:"+list_dropdown.getCount());
+					String place = list_dropdown.getItemAtPosition(arg2).toString();
 					System.out.println("---------->1"+place);
 			     DatabaseHust    p=mySearcher.clickSearch(place);
 			      //  System.out.println("-------------->2"+"Lat="+String.valueOf(p.getLatitudeE6())+"   "+"Lon="+String.valueOf(p.getLongitudeE6()));
@@ -634,9 +626,9 @@ public class HusterMain extends Activity {
 						initOverlay(items);	
 						
 					}
-					editSearch.setText(list1.getItemAtPosition(arg2).toString());
+					editSearch.setText(list_dropdown.getItemAtPosition(arg2).toString());
 					editSearch.selectAll();
-					 list1.setVisibility(View.GONE);
+					list_dropdown.setVisibility(View.GONE);
 		        }  
 			});
 
@@ -651,10 +643,10 @@ public class HusterMain extends Activity {
 					{
 						searchButton.setEnabled(false);
 						 adapter1=new ArrayAdapter<String>(HusterMain.this,android.R.layout.simple_list_item_1,new String[]{});	
-			               list1.setAdapter(adapter1);
+						 list_dropdown.setAdapter(adapter1);
 			               mMapView.getOverlays().remove(mOverlay);
 			               mMapView.refresh();
-			               list1.setVisibility(View.GONE);
+			               list_dropdown.setVisibility(View.GONE);
 			             
 			    
 					}
@@ -672,26 +664,26 @@ public class HusterMain extends Activity {
 		                if(myPoies.length>0)
 		                {
 		                	 adapter1=new ArrayAdapter<String>(HusterMain.this,android.R.layout.simple_list_item_1,myPoies);
-				               list1.setAdapter(adapter1);
-				               list1.setVisibility(View.VISIBLE);
+		                	 list_dropdown.setAdapter(adapter1);
+		                	 list_dropdown.setVisibility(View.VISIBLE);
 				               if(myPoies.length>6)
 				               {
 				            	   LayoutParams params=new LayoutParams(LayoutParams.FILL_PARENT, 700);
-				            	   list1.setLayoutParams(params);
+				            	   list_dropdown.setLayoutParams(params);
 
 				               }
 				               else{
 				            	  
 				            	   LayoutParams params2=new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-				            	   list1.setLayoutParams(params2);
+				            	   list_dropdown.setLayoutParams(params2);
 				               }
-		                	   list1.bringToFront();
+				               list_dropdown.bringToFront();
 				              
 				             
 		                }
 		                else {
-							list1.setEmptyView(list1.getEmptyView());
-                            list1.setVisibility(View.GONE);
+		                	list_dropdown.setEmptyView(list_dropdown.getEmptyView());
+		                	list_dropdown.setVisibility(View.GONE);
 						}
 					}
 					
@@ -716,20 +708,7 @@ public class HusterMain extends Activity {
 				// TODO Auto-generated method stub
 				if(layout.isShown())
 				{
-					 classifyButton.setBackgroundResource(R.drawable.fenlei2);
-					   layout.setVisibility(View.GONE);
-					   Animation animation=AnimationUtils.loadAnimation(HusterMain.this,R.anim.translate_dismiss);
-						layout.startAnimation(animation);
-					timer.schedule(new TimerTask() {
-						
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							Message msg=new Message();
-							msg.what=0;
-							handler.sendMessage(msg);
-						}
-					}, 500);
+					 layout_dismiss();
 					
 				}
 			}
@@ -786,9 +765,9 @@ public class HusterMain extends Activity {
 			 layout_dismiss();
 			return true;
 		}
-		else if(list1.isShown())
+		else if(list_dropdown.isShown())
 		{
-			list1.setVisibility(View.GONE);
+			list_dropdown.setVisibility(View.GONE);
 			return true;
 		}
 		else return false;
@@ -916,63 +895,63 @@ public class HusterMain extends Activity {
 	  private void showfenlei_PopupWindow(View anchor)
 	    {        
 	       
-	// 【Ⅰ】 获取自定义popupWindow布局文件
+	     // 【Ⅰ】 获取自定义popupWindow布局文件
 	
-	LayoutInflater inflater = (LayoutInflater) HusterMain.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);        
-	final View vPopupWindow = inflater.inflate(R.layout.popupwindow, null, false);
-	// 【Ⅱ】 创建PopupWindow实例    
+	       LayoutInflater inflater = (LayoutInflater) HusterMain.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);        
+	       final View vPopupWindow = inflater.inflate(R.layout.popupwindow, null, false);
 	        vPopupWindow.setBackgroundColor(Color.rgb(240, 255, 240));
-	     // /////////////////////////////////////////////////////
-	     // 【Ⅳ】自定义布局中的事件响应
+	    
+	        // 【Ⅳ】自定义布局中的事件响应
 	    	// OK按钮及其处理事件
-	    	        final Button btnmess = (Button) vPopupWindow.findViewById(R.id.mess);	    	      
-                    final Button btnhotel=(Button) vPopupWindow.findViewById(R.id.hotel);
-                    final Button btnbank=(Button)vPopupWindow.findViewById(R.id.bank);
-                    final Button btnmarket=(Button)vPopupWindow.findViewById(R.id.market);
-                    final Button btnatm=(Button)vPopupWindow.findViewById(R.id.atm);
+	    	  final Button btnmess = (Button) vPopupWindow.findViewById(R.id.mess);	    	      
+              final Button btnhotel=(Button) vPopupWindow.findViewById(R.id.hotel);
+              final Button btnbank=(Button)vPopupWindow.findViewById(R.id.bank);
+              final Button btnmarket=(Button)vPopupWindow.findViewById(R.id.market);
+              final Button btnatm=(Button)vPopupWindow.findViewById(R.id.atm);
                     
-                    ViewUtil myUtil1=new ViewUtil(btnmess);
-                    ViewUtil myUtil2=new ViewUtil(btnhotel);
-                    ViewUtil myUtil3=new ViewUtil(btnbank);
-                    ViewUtil myUtil4=new ViewUtil(btnmarket);
-                    ViewUtil myUtil5=new ViewUtil(btnatm);
-                    int height=myUtil1.getHeight()+myUtil2.getHeight()+myUtil3.getHeight()+myUtil4.getHeight()+myUtil5.getHeight();
+              ViewUtil myUtil1=new ViewUtil(btnmess);
+              ViewUtil myUtil2=new ViewUtil(btnhotel);
+              ViewUtil myUtil3=new ViewUtil(btnbank);
+              ViewUtil myUtil4=new ViewUtil(btnmarket);
+              ViewUtil myUtil5=new ViewUtil(btnatm);
+              int height=myUtil1.getHeight()+myUtil2.getHeight()+myUtil3.getHeight()+myUtil4.getHeight()+myUtil5.getHeight();
 	    	  // 【Ⅲ】 显示popupWindow对话框
 	    	// 获取屏幕和对话框各自高宽
 	        int screenWidth, screenHeight, dialgoWidth, dialgoheight;
 	        screenWidth = HusterMain.this.getWindowManager().getDefaultDisplay().getWidth();
 	        screenHeight = HusterMain.this.getWindowManager().getDefaultDisplay().getHeight();
-	       final PopupWindow   pw = new PopupWindow(vPopupWindow, screenWidth/3-5,height, false);// 声明一个弹出框 ，最后一个参数和setFocusable对应
-	        pw.setContentView(vPopupWindow);   // 为弹出框设定自定义的布局 
+	          fenlei_pw = new PopupWindow(vPopupWindow, screenWidth/3,height, false);// 声明一个弹出框 ，最后一个参数和setFocusable对应
+	          fenlei_pw.setContentView(vPopupWindow);   // 为弹出框设定自定义的布局 
 	      //pw.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_corners_pop));//设置整个popupwindow的样式。
-	        pw.setAnimationStyle(R.style.PopupAnimation);
-	        pw.setOutsideTouchable(true);
-	        pw.setBackgroundDrawable(new BitmapDrawable());      
-	        dialgoWidth = pw.getWidth();
-	        dialgoheight = pw.getHeight();	       
-	        pw.showAsDropDown(anchor, 0, 0);
-				
+	          fenlei_pw.setAnimationStyle(R.style.PopupAnimation);
+	          fenlei_pw.setOutsideTouchable(true);
+	          fenlei_pw.setBackgroundDrawable(new BitmapDrawable());      
+//	        dialgoWidth = fenlei_pw.getWidth();
+//	        dialgoheight = fenlei_pw.getHeight();	       
+	        fenlei_pw.showAsDropDown(anchor, 0, 0);
+			fenlei_pw_isshowing=true;	
 	        btnmess.setOnClickListener(new OnClickListener()
 	        {
 	            @Override
 	            public void onClick(View v)
 	            {
 	            	
-	            	if(layout.isShown())
-	            	{
-	            		layout_dismiss();
-	            	}
-	                pw.dismiss();// 关闭
+	            	
+	            	fenlei_pw.dismiss();// 关闭
 	                String pString=btnmess.getText().toString();
 	                Bundle data=new Bundle();
 	                data.putSerializable("pString", pString);	                
 	                Intent intent=new Intent(HusterMain.this,ClassifyListView.class);
 	                intent.putExtras(data);
 	               startActivityForResult(intent, 0);
+	               if(layout.isShown())
+	            	{
+	            		layout_dismiss();
+	            	}
 	            }
 	        }); 
 	
-	    
+	        
 	    }
 
 	/*
@@ -991,7 +970,7 @@ public class HusterMain extends Activity {
 			mySearcher=new DatabaseSearcher(HusterMain.this);
 			editSearch.setText(officename);
 			editSearch.selectAll();
-			list1.setVisibility(View.GONE);	
+			list_dropdown.setVisibility(View.GONE);	
 		    List<GeoPoint>  geoPoints=mySearcher.searchGeo(officename);
 		    OverlayItem item=new OverlayItem(geoPoints.get(0), "", officename);
 			 mItems.add(item);
@@ -1073,16 +1052,6 @@ public class HusterMain extends Activity {
 	  classifyButton.setBackgroundResource(R.drawable.fenlei2);
 		Animation animation=AnimationUtils.loadAnimation(HusterMain.this,R.anim.translate_dismiss);
 		layout.startAnimation(animation);
-		timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				Message msg=new Message();
-				msg.what=0;
-				handler.sendMessage(msg);
-			}
-		}, 500);
   }
  
 
@@ -1214,7 +1183,14 @@ public class HusterMain extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_huster_main, menu);
-		return true;
+		
+	  Intent intent=new Intent(HusterMain.this,SettingActivity.class);
+	  startActivity(intent);
+	  if(layout.isShown())
+	  {
+		  layout_dismiss();
+	  }
+		return false;
 	}
 	
 	
@@ -1427,61 +1403,6 @@ public class HusterMain extends Activity {
                  }
          }, 1);
  } 
-
-	 
-	 
-//	/* 从asset中将离线地图包放入SD卡根目录
-//	 * 
-//	 * */
-//	 
-//	 public  void includeMap(){
-//		  boolean b = false;
-//		  
-//		  String path = Environment.getExternalStorageDirectory().toString();
-//		  String mapPath = path+"/BaiduMapSdk/vmp/h";
-//		  String mapName = "Wu_Han_Shi_21.dat_svc";
-//			// 检查 SQLite 数据库文件是否存在
-//					if ((new File(mapPath+"/"+mapName)).exists() == false) {
-//						// 如 SQLite 数据库文件不存在，再检查一下 database 目录是否存在
-//						
-//						// 如 database 目录不存在，新建该目录
-//						if (!(new File(path+"/BaiduMapSdk")).exists()) {
-//							b = (new File(path)).mkdir();
-//						}
-//						if (!(new File(path+"BaiduMapSdk/vmp")).exists()) {
-//							b = (new File(path+"BaiduMapSdk/vmp")).mkdir();
-//						}
-//						if (!(new File(mapPath).exists())) {
-//							b = (new File(mapPath)).mkdir();
-//						}
-//
-//						
-//						try {
-//							// 得到 assets 目录下我们实现准备好的 SQLite 数据库作为输入流
-//							
-//							InputStream is = this.getBaseContext().getAssets().open(mapName);
-//							// 输出流
-//							OutputStream os = new FileOutputStream(mapPath + "/" + mapName);
-//
-//							// 文件写入
-//							byte[] buffer = new byte[1024];
-//							int length;
-//							while ((length = is.read(buffer)) > 0) {
-//								os.write(buffer, 0, length);
-//							}
-//
-//							// 关闭文件流
-//							os.flush();
-//							os.close();
-//							is.close();
-//							b = true;
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//							b = false;
-//						}
-//					}
-//					
-//	  }
 
 	 
 	 

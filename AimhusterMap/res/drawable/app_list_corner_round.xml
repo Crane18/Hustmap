@@ -16,7 +16,7 @@
        />
        
       <!-- 实心 -->
-      <solid android:color="@color/bg_white"
+      <solid android:color="@color/white"
        />  
        
       <!-- 圆角 -->  

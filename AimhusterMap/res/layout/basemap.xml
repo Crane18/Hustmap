@@ -14,7 +14,10 @@
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/back"
+            android:background="@drawable/button_style"
+            android:text="返回"
+            android:textSize="10pt"
+            android:textColor="#FFFFFF"
             />
          <TextView 
          android:id="@+id/guide_tv"

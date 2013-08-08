@@ -5,9 +5,8 @@
        
       <!-- 渐变 --> 
        <gradient  
-       android:startColor="@color/exit_redh"
-       android:centerColor="@color/exit_redm"  
-       android:endColor="@color/exit_pressed_redl"  
+       android:startColor="@color/redp"  
+       android:endColor="@color/redm"  
        
        android:angle="270" 
        />

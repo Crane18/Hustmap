@@ -55,7 +55,6 @@ public class ClassifyListView extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		 this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
 		setContentView(R.layout.classifylistview);
 		
 		TextView textView=(TextView)findViewById(R.id.show_placename);

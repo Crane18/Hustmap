@@ -49,16 +49,15 @@
              android:clickable="true"     
                  />
         <Button android:id="@+id/showbtn"
-            android:layout_width="wrap_content"
+            android:layout_width="35dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/left_arrow"/>
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/show_btn_arrow"/>
           <LinearLayout
 	        xmlns:android="http://schemas.android.com/apk/res/android"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_toLeftOf="@id/showbtn"
 	        android:layout_alignParentBottom="true"
 	        android:layout_alignWithParentIfMissing="false"
 	        android:layout_centerHorizontal="true"

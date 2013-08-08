@@ -12,16 +12,15 @@
     <color name="Honeydew">#F0FFF0</color>
     <color name="DarkOliveGreen">#556B2F</color>
     <color name="DarkSlateGray">#2F4F4F</color>
-  
+   <color name = "whitegray">#F5F5F5</color>
+    
     <color name="black">#55000000</color>
-    <color name="exit_redh">#B22F32</color>
-    <color name="exit_redl">#F8A0AC</color>
-    <color name="exit_pressed_redl">#F88A8F</color>
-    <color name="exit_redm">#B22F32</color>
-    <color name="exit_redp">#A23F32</color>
-    <color name="bg_white">#CCFFFFFF</color>
+    <color name="redh">#B22F32</color>
+    <color name="redl">#F8D0CC</color>
+    <color name="redm">#B22F32</color>
+    <color name="redp">#A23F32</color>
+    <color name="white">#55FFFFFF</color>
     <color name="gray">#757475</color>
     <color name="green">#90CB9F</color>
     <color name="backgray">#EEEEEF</color>
-    <color name="background_gray">#DDDDDD</color>
 </resources>

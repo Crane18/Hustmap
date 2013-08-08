@@ -18,7 +18,6 @@ import com.umeng.fb.FeedbackAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class SettingActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE); 
 	    app = (ManagerApp)this.getApplication();
 	        app.addActivity(this);
-		setContentView(R.layout.activity_setting);
+		setContentView(R.layout.setting);
 		
 		feedback = (TextView)findViewById(R.id.feedback);
 		trouble  = (TextView)findViewById(R.id.trouble);
@@ -60,12 +59,7 @@ public class SettingActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-//				Intent intent = new Intent();
-//				intent.setClass(SettingActivity.this, HusterMain.class);
-//				SettingActivity.this.startActivity(intent);
 				SettingActivity.this.finish();
-				overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-				
 			}
 		});
 		exit.setOnClickListener(new OnClickListener() {
@@ -86,15 +80,11 @@ public class SettingActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-//			Intent intent = new Intent();
-//			intent.setClass(SettingActivity.this, FeedbackActivity.class);
-//			SettingActivity.this.startActivity(intent);
+
 			FeedbackAgent agent = new FeedbackAgent(SettingActivity.this);
 			agent.startFeedbackActivity();
 			agent.sync();
 			
-			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-//			SettingActivity.this.finish();
 		}
 		
 	}
@@ -109,7 +99,6 @@ public class SettingActivity extends Activity {
 			SettingActivity.this.startActivity(intent);
 			
 			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-			SettingActivity.this.finish();
 		}
 		
 	}
@@ -123,8 +112,6 @@ public class SettingActivity extends Activity {
 			intent.setClass(SettingActivity.this, NavigateActivity.class);
 			SettingActivity.this.startActivity(intent);
 			
-			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-			SettingActivity.this.finish();
 		}
 		
 	}
@@ -137,30 +124,10 @@ public class SettingActivity extends Activity {
 			Intent intent = new Intent();
 			intent.setClass(SettingActivity.this, AboutActivity.class);
 			SettingActivity.this.startActivity(intent);
-			
-			overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-			SettingActivity.this.finish();
-//			UmengUpdateAgent.update(SettingActivity.this);
 		}
 		
 	}
 	
-	@Override
-	public boolean onKeyDown(int keyCode,KeyEvent event){
-		
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//			Intent intent = new Intent();
-//			intent.setClass(SettingActivity.this, HusterMain.class);
-//			SettingActivity.this.startActivity(intent);
-			SettingActivity.this.finish();
-			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-			
-			
-			return true ;
-		}
-		
-		return false;
-	}
 	
 	
 	public void onResume() {
