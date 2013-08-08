@@ -14,7 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center" 
-        android:background="@drawable/button_style" 
+        android:background="@color/whitegray" 
         android:text="食堂"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -23,7 +23,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/button_style"
+        android:background="@color/white"
         android:text="银行"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -32,7 +32,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/button_style"
+        android:background="@color/whitegray"
         android:text="超市"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -41,7 +41,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
        android:layout_gravity="center"
-       android:background="@drawable/button_style"
+       android:background="@color/white"
         android:textAppearance="?android:attr/textAppearanceMedium" 
         android:text="ATM机"/>
    
@@ -50,7 +50,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/button_style"
+            android:background="@color/whitegray"
             android:text="旅馆" >
         </Button>
 

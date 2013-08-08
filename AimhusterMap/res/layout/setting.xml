@@ -3,9 +3,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" 
-    android:background="@color/background_gray">
+    android:background="@color/backgray">
     
      <LinearLayout
+             xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="fill_parent"
              android:layout_height="wrap_content"       
              android:orientation="horizontal" 
@@ -17,20 +18,24 @@
             android:id="@+id/back_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/back"
+            android:background="@drawable/button_style"
+            android:text="返回"
+            android:textSize="10pt"
+            android:textColor="#FFFFFF" 
             />
         
         <TextView
             android:id="@+id/show_placename"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:gravity="center"
             android:textSize="10pt"
-            android:paddingLeft="70dp"
-            android:textColor="@color/bg_white"
-            android:text="@string/action_settings"
+            android:paddingLeft="80dp"
+            android:textColor="#FFFFFF"
+            android:text="设置"
             />
     </LinearLayout>
+    
+    
     
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -67,8 +72,8 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"      
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
         >
         
                
@@ -175,7 +180,7 @@
           android:text="@string/exit"
           android:textSize="22dip" 
           android:background="@drawable/exit_selector"
-          android:textColor="@color/bg_white"/>
+          android:textColor="@color/white"/>
        </RelativeLayout>
 
     

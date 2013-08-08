@@ -17,6 +17,7 @@
        
       <!-- 实心 -->
       <solid android:color="@color/bg_white"
+
        />  
        
       <!-- 圆角 -->  

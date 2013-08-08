@@ -55,12 +55,16 @@
         <activity android:name="com.umeng.fb.ConversationActivity"/>
         <activity android:name="com.umeng.fb.ContactActivity"/>
         <activity
-            android:name="com.example.aimhustermap.SettingActivity"></activity>
+            android:name="com.example.aimhustermap.SettingActivity">            
+        </activity>
+  
         <activity
             android:name="com.example.aimhustermap.AboutActivity"/>
         <activity
             android:name="com.example.aimhustermap.FeedbackActivity"
-           android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+           
+           />
+     
         <activity
             android:name="com.example.aimhustermap.NavigateActivity"/>
         <activity

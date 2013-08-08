@@ -60,7 +60,6 @@ public class ShowDetail_Activity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		 this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
 		setContentView(R.layout.showdetail_activity);
 		final TextView  textView=(TextView)findViewById(R.id.building_name);
 		Intent intent=getIntent();

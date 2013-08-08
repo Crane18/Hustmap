@@ -8,6 +8,7 @@
        android:startColor="@color/exit_redh"
        android:centerColor="@color/exit_redm"  
        android:endColor="@color/exit_pressed_redl"  
+
        
        android:angle="270" 
        />
